@@ -24,7 +24,18 @@ var config={
 };
 var data;
 var brain;
-Papa.parse("Book.csv",config);
+function setup(){
+	// parsing the csv file using papa parser
+	Papa.parse("Book.csv",config);
+}
 function parsingComplete(result,file){
 	data=result.data;
+	createNeuralNetwork();
+}
+function createNeuralNetwork(){
+	// creating neural network with 3 input nodes, 3 hidden layer nodes, 3 output nodes
+	brain=new NeuralNetwork(3,3,3);
+}
+function train(){
+	// train the neural network
 }
