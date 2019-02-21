@@ -38,4 +38,23 @@ function createNeuralNetwork(){
 }
 function train(){
 	// train the neural network
+	for(var i=1;i<data.length;i++){
+		var inputs=[];
+		inputs[0]=parseInt(data[i][0])/40;
+		inputs[1]=parseInt(data[i][1])/80;
+		inputs[2]=parseInt(data[i][2])/600;
+		var output=[];
+		if(inputs[4]==="critical"){
+
+		}
+		else if(inputs[4]==="severe"){
+
+		}
+		else if(inputs[4]==="mild"){
+
+		}
+		else if(inputs[4]==="no"){
+
+		}
+	}
 }
