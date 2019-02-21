@@ -155,7 +155,7 @@ NeuralNetwork.prototype.train = function(inputs_array, targets_array) {
 
 
 // Query the network!
-NeuralNetwork.prototype.query = function(inputs_array) {
+NeuralNetwork.prototype.predict = function(inputs_array) {
 
   // Turn input array into a matrix
   var inputs = Matrix.fromArray(inputs_array);
