@@ -32,6 +32,7 @@ var data;
 var brain;
 var accuracy=0;
 var test_set_size=2444;
+var savedModel;
 function setup(){
 	// parsing the csv file using papa parser
 	Papa.parse("Book.csv",config);
@@ -42,10 +43,19 @@ function parsingComplete(result,file){
 	trainNeuralNetwork();
 	accuracy=testNeuralNetwork();
 	console.log("Accuracy= "+accuracy*100+"%");
+	saveModel();
 }
 function createNeuralNetwork(){
 	// creating neural network with 2 hidden layers
 	brain=new brain.NeuralNetwork(brainConfig);
+}
+function saveModel(){
+	savedModel=brain.toJSON();
+	$.post('/saveModel',{modelJSON:savedModel},function(data,status){
+		if(data==="success"){
+			console.log("Model Saved to File");
+		}
+	});
 }
 function testNeuralNetwork(){
 	var corrently_predicted=0;
