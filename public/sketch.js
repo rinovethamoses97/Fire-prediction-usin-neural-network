@@ -51,7 +51,10 @@ function createNeuralNetwork(){
 }
 function saveModel(){
 	savedModel=brain.toJSON();
-	$.post('/saveModel',{modelJSON:savedModel},function(data,status){
+	writeModelToJSONFile();
+}
+function writeModelToJSONFile(){
+	$.post('/saveModel',savedModel,function(data,status){
 		if(data==="success"){
 			console.log("Model Saved to File");
 		}

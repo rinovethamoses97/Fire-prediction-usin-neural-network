@@ -11,8 +11,7 @@ app.get('/',function(req,res){
     res.sendFile(__dirname+'/public/index.html');
 });
 app.post('/saveModel',function(req,res){
-    console.log(req.body.modelJSON);
-    fs.writeFile('./model.json',req.body.modelJSON,function(err){
+    fs.writeFile('./model.json',JSON.stringify(req.body),function(err){
         if(err){
             console.log("File Writing Failed");
             return;
