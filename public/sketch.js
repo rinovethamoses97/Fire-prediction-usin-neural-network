@@ -22,6 +22,12 @@ var config={
 	transform: undefined,
 	delimitersToGuess: [',', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP]
 };
+var brainConfig={
+	binaryThresh: 0.5,
+    hiddenLayers: [6,6],     
+    activation: 'sigmoid', 
+    leakyReluAlpha: 0.01
+}
 var data;
 var brain;
 var accuracy=0;
@@ -35,11 +41,11 @@ function parsingComplete(result,file){
 	createNeuralNetwork();
 	trainNeuralNetwork();
 	accuracy=testNeuralNetwork();
-	console.log("Accuracy= "+accuracy);
+	console.log("Accuracy= "+accuracy*100+"%");
 }
 function createNeuralNetwork(){
-	// creating neural network with 3 input nodes, 9 hidden layer nodes, 3 output nodes
-	brain=new NeuralNetwork(3,6,4);
+	// creating neural network with 2 hidden layers
+	brain=new brain.NeuralNetwork(brainConfig);
 }
 function testNeuralNetwork(){
 	var corrently_predicted=0;
@@ -49,8 +55,6 @@ function testNeuralNetwork(){
 		inputs[1]=parseInt(data[i][1])/80;
 		inputs[2]=parseInt(data[i][3])/600;
 		var outputs=predict(inputs);
-		console.log(analyseOutput(outputs)+"===="+data[i][4]);
-		console.log(outputs);
 		if(analyseOutput(outputs)===data[i][4]){
 			corrently_predicted++;
 		}
@@ -71,29 +75,27 @@ function analyseOutput(outputs){
 }
 function predict(inputs){
 	//predicting ouput for the given input
-	return brain.predict(inputs);
+	return brain.run(inputs);
 }
 function trainNeuralNetwork(){
 	// train the neural network
+	var traning_data=[];
 	for(var i=1;i<8000;i++){
-		var inputs=[];
-		inputs[0]=parseInt(data[i][0])/40;
-		inputs[1]=parseInt(data[i][1])/80;
-		inputs[2]=parseInt(data[i][3])/600;
-		var outputs;
+		traning_data[i-1]=new Object();
+		traning_data[i-1].input=[parseInt(data[i][0])/40,parseInt(data[i][1])/80,parseInt(data[i][3])/600];
 		if(data[i][4]==="critical"){
-			outputs=[1,0,0,0];
+			traning_data[i-1].output=[1,0,0,0];
 		}
 		else if(data[i][4]==="severe"){
-			outputs=[0,1,0,0];
+			traning_data[i-1].output=[0,1,0,0];
 		}
 		else if(data[i][4]==="mild"){
-			outputs=[0,0,1,0];
+			traning_data[i-1].output=[0,0,1,0];
 		}
 		else if(data[i][4]==="no"){
-			outputs=[0,0,0,1];
+			traning_data[i-1].output=[0,0,0,1];
 		}
-		brain.train(inputs,outputs);
 	}
+	brain.train(traning_data);
 	console.log("Training Completed");
 }
