@@ -22,14 +22,16 @@ var config={
 	transform: undefined,
 	delimitersToGuess: [',', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP]
 };
-var brainConfig={
+var networkConfig={
+	inputSize:3,
+	outputSize:4,
 	binaryThresh: 0.5,
     hiddenLayers: [6,6],     
     activation: 'sigmoid', 
     leakyReluAlpha: 0.01
 }
 var data;
-var brain;
+var network;
 var accuracy=0;
 var test_set_size=2444;
 var savedModel;
@@ -44,13 +46,29 @@ function parsingComplete(result,file){
 	accuracy=testNeuralNetwork();
 	console.log("Accuracy= "+accuracy*100+"%");
 	saveModel();
+	var  options={};
+	options.height = 400;
+	options.width = 300;
+	options.radius = 6;
+	options.line = {};
+	options.inputs = {};
+	options.hidden = {};
+	options.outputs = {};
+	options.line.width = 0.5;
+	options.line.color = "black";
+	options.inputs.color = "rgba(0, 128, 0, 0.5)";
+	options.hidden.color = "rgba(128,0 , 0, 0.5)";
+	options.outputs.color = "rgba(0, 128, 0, 0.5)";
+	options.fontSize = "14px";
+	options.inputs.label = ["Temperature","Humidity","Smoke"];
+	document.getElementById("result").innerHTML=brain.utilities.toSVG(network,options);
 }
 function createNeuralNetwork(){
-	// creating neural network with 2 hidden layers
-	brain=new brain.NeuralNetwork(brainConfig);
+	// creating neural network with 2 hidden layers each of 3 neurons
+	network=new brain.NeuralNetwork(networkConfig);
 }
 function saveModel(){
-	savedModel=brain.toJSON();
+	savedModel=network.toJSON();
 	writeModelToJSONFile();
 }
 function writeModelToJSONFile(){
@@ -88,7 +106,7 @@ function analyseOutput(outputs){
 }
 function predict(inputs){
 	//predicting ouput for the given input
-	return brain.run(inputs);
+	return network.run(inputs);
 }
 function trainNeuralNetwork(){
 	// train the neural network
@@ -109,6 +127,6 @@ function trainNeuralNetwork(){
 			traning_data[i-1].output=[0,0,0,1];
 		}
 	}
-	brain.train(traning_data);
+	network.train(traning_data);
 	console.log("Training Completed");
 }
